@@ -1,0 +1,539 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Interim, descriptive findings from Hyperliquid's December 2025 order-by-order BTC book: fast moves, breakouts, absorption, liquidity-provider wallets and price response.">
+<style>:root{color-scheme:light}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Hyperliquid L4 Interim</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<style>
+:root{
+  --ground:#F4F6F7; --surface:#FFFFFF; --ink:#16202A; --muted:#58636F; --rule:#D8DEE3;
+  --accent:#0B6A86; --accent-soft:#E0EEF3;
+  --against:#A3402A; --against-soft:#F6E4DE;
+  --context:#7A6212; --context-soft:#F3EDD8;
+  --ok:#2E6A3E; --ok-soft:#E1EEE4;
+  --fig:#FCFCFC;
+  --display:"IBM Plex Sans Condensed","Arial Narrow",system-ui,sans-serif;
+  --body:"Source Serif 4",Georgia,"Times New Roman",serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --ground:#0E1317; --surface:#151C22; --ink:#E3E8EC; --muted:#98A4AF; --rule:#28323B;
+    --accent:#5DB6CF; --accent-soft:#15313A;
+    --against:#E2826D; --against-soft:#3A211B;
+    --context:#D6B85A; --context-soft:#322B16;
+    --ok:#7CC48E; --ok-soft:#18301F;
+    --fig:#F3F4F5;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --ground:#0E1317; --surface:#151C22; --ink:#E3E8EC; --muted:#98A4AF; --rule:#28323B;
+  --accent:#5DB6CF; --accent-soft:#15313A;
+  --against:#E2826D; --against-soft:#3A211B;
+  --context:#D6B85A; --context-soft:#322B16;
+  --ok:#7CC48E; --ok-soft:#18301F;
+  --fig:#F3F4F5;
+}
+*{box-sizing:border-box}
+body{background:var(--ground);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.6;margin:0}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:20px;padding-block:28px 64px;display:grid;grid-template-columns:1fr;gap:32px}
+@media (min-width:1100px){.wrap{grid-template-columns:220px minmax(0,1fr)}}
+nav.toc{font-family:var(--display);font-size:14px}
+nav.toc ol{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px 14px}
+@media (min-width:1100px){nav.toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 20px);align-self:start}nav.toc ol{flex-direction:column;gap:8px}}
+nav.toc a{color:var(--muted);text-decoration:none;border-bottom:1px solid transparent}
+nav.toc a:hover,nav.toc a:focus-visible{color:var(--accent);border-bottom-color:var(--accent);outline:none}
+nav.toc .toc-h{font-weight:600;text-transform:uppercase;letter-spacing:.08em;font-size:12px;color:var(--muted);margin-bottom:10px}
+main{min-width:0}
+header.top{border-bottom:1px solid var(--rule);padding-bottom:22px;margin-bottom:8px}
+.eyebrow{font-family:var(--mono);font-size:12.5px;letter-spacing:.04em;color:var(--muted)}
+h1{font-family:var(--display);font-weight:700;font-size:clamp(30px,4.6vw,46px);line-height:1.08;margin:.3em 0 .35em;text-wrap:balance;letter-spacing:-.01em}
+h2{font-family:var(--display);font-weight:700;font-size:28px;line-height:1.15;margin:0 0 .4em;text-wrap:balance}
+h3{font-family:var(--display);font-weight:600;font-size:20px;line-height:1.25;margin:1.6em 0 .5em;text-wrap:balance}
+p,li{max-width:70ch}
+p{margin:.5em 0}
+ul{padding-left:1.2em;margin:.4em 0}
+li{margin:.25em 0}
+.lede{font-size:19px;color:var(--ink);max-width:62ch}
+.status{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.pill{font-family:var(--mono);font-size:12px;padding:4px 9px;border-radius:999px;border:1px solid var(--rule);background:var(--surface);color:var(--muted);white-space:nowrap}
+.pill.key{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
+section{padding-top:36px;scroll-margin-top:16px}
+section+section{border-top:1px solid var(--rule);margin-top:36px}
+.num{font-family:var(--mono);font-size:.9em;font-variant-numeric:tabular-nums;white-space:nowrap}
+.short{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-top:14px}
+.short div{background:var(--surface);border:1px solid var(--rule);border-radius:6px;padding:14px 16px;font-size:16px;line-height:1.5}
+.short b{font-family:var(--display);font-weight:600;display:block;font-size:17px;margin-bottom:4px}
+.tbl{overflow-x:auto;margin:14px 0;border:1px solid var(--rule);border-radius:6px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:15px;line-height:1.45}
+th,td{text-align:left;vertical-align:top;padding:10px 12px;border-bottom:1px solid var(--rule)}
+th{font-family:var(--display);font-weight:600;font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);background:var(--ground)}
+tr:last-child td{border-bottom:0}
+td.n{font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.chip{display:inline-block;font-family:var(--mono);font-size:11.5px;line-height:1;padding:4px 7px;border-radius:4px;white-space:nowrap;vertical-align:1px}
+.cls-A{background:var(--accent);color:var(--surface)}
+.cls-Baddr{border:1px solid var(--accent);color:var(--accent)}
+.cls-BL4{background:var(--rule);color:var(--ink)}
+.cls-C{border:1px dashed var(--muted);color:var(--muted)}
+.sup{font-family:var(--display);font-weight:600;font-size:12.5px;padding:3px 8px;border-radius:4px;white-space:nowrap;display:inline-block}
+.sup.against{background:var(--against-soft);color:var(--against)}
+.sup.context{background:var(--context-soft);color:var(--context)}
+.sup.none{background:var(--rule);color:var(--ink)}
+figure{margin:18px 0 22px;max-width:100%}
+figure .frame{background:var(--fig);border:1px solid var(--rule);border-radius:6px;padding:6px;overflow:hidden}
+figure img{display:block;width:100%;height:auto}
+figcaption{font-size:14.5px;color:var(--muted);margin-top:7px;max-width:75ch;line-height:1.45}
+.finding{margin-top:30px}
+.obs,.interp{margin:.4em 0}
+.label{font-family:var(--display);font-weight:600;font-size:13px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-right:6px}
+.ex{font-size:15.5px;border-left:3px solid var(--rule);padding:4px 0 4px 14px;margin:12px 0;max-width:72ch}
+.ex.counter{border-left-color:var(--against)}
+.ex .label{display:block;margin-bottom:2px}
+.callout{background:var(--surface);border:1px solid var(--rule);border-left:4px solid var(--accent);border-radius:6px;padding:14px 18px;margin:18px 0;max-width:78ch}
+.callout.warn{border-left-color:var(--against)}
+.callout h3{margin-top:0}
+.two{display:grid;grid-template-columns:1fr;gap:18px}
+@media (min-width:900px){.two{grid-template-columns:1fr 1fr}}
+.watch{counter-reset:w}
+.watch td:first-child{font-family:var(--mono);color:var(--muted)}
+.small{font-size:14.5px;color:var(--muted)}
+footer{margin-top:48px;border-top:1px solid var(--rule);padding-top:16px;font-size:14px;color:var(--muted)}
+a{color:var(--accent)}
+a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+html{scroll-behavior:smooth}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+<nav class="toc" aria-label="Contents">
+  <div class="toc-h">Contents</div>
+  <ol>
+    <li><a href="#short">Short version</a></li>
+    <li><a href="#watch">Provisional watch-list</a></li>
+    <li><a href="#data">The data</a></li>
+    <li><a href="#q1">Fast moves &amp; thin levels</a></li>
+    <li><a href="#q2">Breakouts</a></li>
+    <li><a href="#q4">Absorption &amp; walls</a></li>
+    <li><a href="#q5">Liquidity providers</a></li>
+    <li><a href="#q6">Price response</a></li>
+    <li><a href="#q7">Other patterns</a></li>
+    <li><a href="#changed">Changed after review</a></li>
+    <li><a href="#open">Open questions</a></li>
+    <li><a href="#caveats">Caveats</a></li>
+  </ol>
+</nav>
+
+<main>
+<header class="top">
+  <div class="eyebrow">HYPERLIQUID · BTC PERPETUAL · DECEMBER 2025 · ORDER-BY-ORDER (L4) BOOK</div>
+  <h1>What happens to resting BTC orders when price moves</h1>
+  <p class="lede">An interim, descriptive read of 16 days of Hyperliquid's full order-by-order book: every order, every cancel, every fill, and the wallet behind each. It covers fast moves, breakouts, absorption, the wallets that supply liquidity, and whether anything visible in the book tells you where price goes next.</p>
+  <div class="status">
+    <span class="pill key">interim</span>
+    <span class="pill key">descriptive, not a test</span>
+    <span class="pill">discovery half: 16 odd days</span>
+    <span class="pill">even days sealed for the confirmatory test</span>
+    <span class="pill">not a trading signal</span>
+  </div>
+</header>
+
+<section id="short">
+  <h2>The short version</h2>
+  <p>Most numbers here describe events chosen because of what price later did, so they explain the past rather than forecast it. A pre-registered test on the sealed half of the month is still running and can overturn any of this.</p>
+  <div class="short">
+    <div><b>The book ahead of price is mostly gone when price arrives.</b>Of the size displayed at a level 2 s before a fast move reached it, <span class="num">8%</span> traded. At arrival only ~1 traversed level in 11 held ≥ 1 BTC, against ~1 in 2 at calm moments.</div>
+    <div><b>Who posted it matters more than how big it is.</b>Orders resting ≥ 3 s from near-book quoters were still there at the print <span class="num">26%</span> of the time (2% of their BTC). Slow wallets' orders: <span class="num">97%</span>. The public book does not show the owner.</div>
+    <div><b>Fast moves run on forced orders.</b>Fired stops plus liquidations were <span class="num">~35%</span> of fast-move volume, against ~6% normally. Stops fire in batches about every 3 s and fill a median 1.8 bps past their trigger.</div>
+    <div><b>Breakout edges look the same whether they break or not.</b>Depth beyond the edge, refill behind it and resting stops did not separate the 100 successes from the 113 failures.</div>
+    <div><b>"Absorption" was a coin flip.</b>After heavy one-sided aggression that barely moved price, price went ±10 bps with the aggressors <span class="num">50.2%</span> of the time.</div>
+    <div><b>Nothing survives a manual delay and fees.</b>Tape bursts, sweeps and pull bursts add a fraction of a bp after a 2 s delay. A taker round trip costs ~9 bps. HL's mid trails Binance by ~0.7 s.</div>
+  </div>
+</section>
+
+<section id="watch">
+  <h2>Provisional watch-list for a manual trader</h2>
+  <p>Ordered by how consistently each observation held across sections and counter-examples, and by how directly it bears on your own orders. It is not a ranking by edge: no item showed a tradeable edge. Observability classes: <span class="chip cls-A">A</span> public feed in time, <span class="chip cls-Baddr">B-addr</span> free per-address stream for ≤ 10 wallets, <span class="chip cls-BL4">B-L4</span> needs a node or data vendor, <span class="chip cls-C">C</span> not knowable live.</p>
+  <div class="tbl">
+  <table class="watch">
+    <thead><tr><th>#</th><th>What to watch</th><th>Class</th><th>What it might mean</th><th>Support so far</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>Size displayed just ahead of price, most of all in a fast market</td><td><span class="chip cls-A">A</span></td><td>Far less will be there when price arrives. Fills and stop slippage will be worse than the book suggests.</td><td><span class="sup context">Sizing &amp; slippage only</span></td></tr>
+      <tr><td>2</td><td>One-sided tape bursts, sweeps, pokes through round numbers</td><td><span class="chip cls-A">A</span></td><td>The move has already happened. Every family nets about −9 bps as an entry at 2–5 s.</td><td><span class="sup against">Against as an entry</span></td></tr>
+      <tr><td>3</td><td>A stop cascade: prints pulsing every ~3 s</td><td><span class="chip cls-A">A</span> rhythm · <span class="chip cls-BL4">B-L4</span> stop identity</td><td>Your own stops fill ~1.8 bps past the trigger (p95 ~11). Stops plus liquidations are a third of fast-move flow.</td><td><span class="sup context">Execution only</span></td></tr>
+      <tr><td>4</td><td>Binance BTC perp moving first</td><td><span class="chip cls-A">A</span></td><td>HL tends to follow within ~0.7 s, which is below a manual reaction time. The HL event adds nothing beyond the Binance move.</td><td><span class="sup context">Context only</span></td></tr>
+      <tr><td>5</td><td>The minute after a fast move</td><td><span class="chip cls-A">A</span> coarse grid</td><td>Depth near price stays below normal for a minute or more (median 77 s to recover).</td><td><span class="sup context">Sizing only</span></td></tr>
+      <tr><td>6</td><td>A single large order near price</td><td><span class="chip cls-A">A</span> size · <span class="chip cls-Baddr">B-addr</span> owner, flags</td><td>If price actually reaches it, it usually trades. Its pull says nothing about direction; absorption at it is 50/50.</td><td><span class="sup none">Not supported as a hold cue</span></td></tr>
+      <tr><td>7</td><td>Up to 10 top quoter addresses</td><td><span class="chip cls-Baddr">B-addr</span></td><td>A live map of where most near-touch size is and when it leaves. No "informed maker" was found.</td><td><span class="sup context">Liquidity map only</span></td></tr>
+      <tr><td>8</td><td>Depth and resting stops beyond a range edge; the book at the first stall</td><td><span class="chip cls-A">A</span> · <span class="chip cls-BL4">B-L4</span></td><td>Nothing that separated success from failure.</td><td><span class="sup against">Against</span></td></tr>
+      <tr><td>9</td><td>Round numbers; repeated attempts at a level</td><td><span class="chip cls-A">A</span></td><td>Behaves the same as a placebo price like $x37.</td><td><span class="sup against">Against</span></td></tr>
+      <tr><td>10</td><td>Blinking levels, flicker, pull bursts</td><td><span class="chip cls-A">A</span> · <span class="chip cls-BL4">B-L4</span></td><td>Activity and quote churn, not direction.</td><td><span class="sup against">Against as direction</span></td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="small">Descriptive evidence is not support for pre-trade use. The confirmatory track tests these ideas on the sealed half with registered trades, stops and fees.</p>
+</section>
+
+<section id="data">
+  <h2>The data in plain language</h2>
+  <p>The source is the "Open Book" release by Albers, Cucuringu, Howison and Shestopaloff (Zenodo 18184441, CC BY 4.0). A non-validating Hyperliquid node wrote three streams. December 2025 is the one month where all three are complete. The BTC parts were joined so that every change to the book has a time, an order, a wallet and a cause.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Stream</th><th>What it holds</th><th>December BTC</th></tr></thead>
+    <tbody>
+      <tr><td>Order statuses</td><td>every order's life: placed, filled, cancelled, triggered, engine removals, rejections, each with the wallet</td><td class="n">834 M owner cancels</td></tr>
+      <tr><td>Book diffs</td><td>every change to the visible book, per order id</td><td class="n">1.70 B events · 27.7 M blocks</td></tr>
+      <tr><td>Trades</td><td>every execution, with both wallets, aggressor side, TWAP and liquidation markers</td><td class="n">11.9 M trades</td></tr>
+    </tbody>
+  </table></div>
+  <div class="two">
+    <div>
+      <h3>What it can and cannot tell us</h3>
+      <ul>
+        <li><b>Can:</b> whether each unit of size that left a price was filled, cancelled by its owner, or removed by the engine. The accounting balances exactly at every price.</li>
+        <li><b>Cannot:</b> why an order was cancelled. "Pulled" versus "re-posted nearby" is a label that depends on a time window: 54.5% of cancelled size counts as pulled at 500 ms, 18.1% at 2 s.</li>
+        <li><b>Wallets</b> are pseudonymous addresses. One operator can run many; a vault can pool many people. Behaviour is observable, purpose is not.</li>
+        <li><b>Gaps:</b> 15 data outages over 10 s in December (~6.3 h), despite the dataset's "no gaps" note. Every analysis drops windows that touch one.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>What a trader could see live in December 2025</h3>
+      <ul>
+        <li>The public book: <b>20 levels per side, a snapshot every ~0.54 s</b>. At $1 grouping that is only about $20 (~2 bps).</li>
+        <li>The trade tape: price, size, aggressor side and <b>both wallets of every print</b>.</li>
+        <li>Free per-address streams for up to 10 chosen wallets, delivered in ~0.4 s.</li>
+        <li>No public feed showed who owned each resting order.</li>
+        <li>A pre-armed one-click reaction takes ~0.9–1.2 s. Fees at tier 0: 4.5 bps taker, 1.5 bps maker, so <b>9 bps</b> for a taker round trip.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="callout">
+    <h3>Why some things look like foresight</h3>
+    <p>Inside each ~86 ms block, Hyperliquid runs post-only adds first, then cancels, then market and IOC orders. So a maker's cancel in the same block as a sweep always wins by protocol. Measured here: at a level, cancels precede takers in 99.995% of blocks, and queues fill first-come-first-served 99.88% of the time. The analysis counts a cancel as "ahead" of a print only if it came at least 3 blocks and 250 ms earlier.</p>
+  </div>
+</section>
+
+<section id="q1">
+  <h2>Fast moves and thin levels</h2>
+  <p class="small">88 fast moves (mid ≥ 20 bps from its trailing 30 s mean; median 38 bps in 31 s) on 8 odd days, Dec 1–17, and 83 slow controls covering the same distance at least 5× slower. Brackets are day-block bootstrap 95% intervals.</p>
+
+  <div class="finding">
+    <h3>Near the touch, most pulled size left well before the first print, and about half of it left before the move even started</h3>
+    <figure><div class="frame"><img src="figures/q1q3_fast_moves_timing.png" alt="Timing of pulls relative to the first print at each traversed level, fast vs slow moves" loading="lazy"></div>
+    <figcaption>When size within 2 bps of the touch was pulled, relative to the first print at its price.</figcaption></figure>
+    <p class="obs"><span class="label">Observation</span>In fast moves 87.5% of near-touch pulled size left ≥ 3 blocks and ≥ 250 ms before the first print, but <span class="num">48% [46–51]</span> of it left before the move started. Of the pulls made after the move began: 76% early, 6.1% in the last 1–2 blocks, 2.7% in the same block, 15% after the first print.</p>
+    <p class="interp"><span class="label">Interpretation</span>Much of "the liquidity vanished before it was hit" is ordinary churn that happened before anything moved. The in-move pulls are mostly early, which fits anticipation or a reaction to an earlier cue, not a same-block race.</p>
+    <p><span class="chip cls-BL4">B-L4</span> <span class="small">A public-feed trader sees only the net shrinking of a displayed level between snapshots, within ~2 bps.</span></p>
+    <div class="ex"><span class="label">Example</span>Dec 11 03:10:47 UTC, down 35 bps in 34 s: 95% of pulled size left early, 68% before the start. Bid rows full seconds earlier emptied at 03:11:11–03:11:22.</div>
+    <div class="ex counter"><span class="label">Counter-example</span>Dec 5 03:55:59 UTC, down 37 bps in 53 s: only 6% left before the start and 27% was pulled after the first print. The book waited to be hit and was cleaned up afterwards.</div>
+  </div>
+
+  <div class="finding">
+    <h3>"Pulled faster ahead of a fast move" is a per-second effect of price speed</h3>
+    <figure><div class="frame"><img src="figures/q1q3_fast_moves_hazard.png" alt="Pull hazard per resting BTC-second and per traversed level, fast vs slow" loading="lazy"></div>
+    <figcaption>Left: per resting BTC-second, fast moves pull 2–3.5× as much. Right: per traversed level the total is about the same, and at 0.5–5 bps it is about half.</figcaption></figure>
+    <p class="obs"><span class="label">Observation</span>The touch covers the same distance ~33× faster in a fast move. Per traversed level the total pulled ahead is 10.8 vs 10.1 BTC (ratio <span class="num">1.07 [0.92–1.28]</span>); per fast/control pair at 0.5–5 bps the median is 0.53.</p>
+    <p class="interp"><span class="label">Interpretation</span>A quoter that keeps a fixed distance from the touch re-prices every time the touch moves. The book ahead of a fast move turns over faster; it is not emptied more per level.</p>
+  </div>
+
+  <div class="finding">
+    <h3>What trades at a traversed level: fresh quotes from fast wallets, plus whatever slow wallets left resting</h3>
+    <figure><div class="frame"><img src="figures/q1q3_fast_moves_fate.png" alt="Fate of size displayed 2 s before price arrived, by owner type" loading="lazy"></div>
+    <figcaption>Fate of the size displayed at a level 2 s before price first printed there.</figcaption></figure>
+    <p class="obs"><span class="label">Observation</span>Only <span class="num">8.0% [6.2–10.3]</span> of that size traded. The top-10 makers owned 58% of it and 1.9% of theirs traded; ~17k low-activity wallets owned 9% and <span class="num">71%</span> of theirs traded. Half of all fills at traversed levels came from high-frequency orders placed in the last 2 s before the print.</p>
+    <p class="interp"><span class="label">Interpretation</span>Big size shown a few ticks ahead is a weak promise, and nothing shown does not mean nothing will trade.</p>
+    <p><span class="chip cls-BL4">B-L4</span> owner and freshness · <span class="chip cls-A">A</span> the maker wallet of each print, after it happens</p>
+    <div class="ex counter"><span class="label">Counter-example</span>Dec 7 14:25:58 UTC, down 38 bps in 12.5 s: 309 BTC filled, 98% against low-activity wallets' resting bids near $87,890 and $87,825, and price stalled at each of those rows.</div>
+    <figure><div class="frame"><img src="figures/q1q3_fast_moves_card_q1_counter_max_filled.png" alt="Event card: slow wallets' resting bids absorbing a fast down move on Dec 7" loading="lazy"></div>
+    <figcaption>Event card, Dec 7 14:25:58 UTC. Price path over a heatmap of resting size; markers show fills by taker type and pulls by timing.</figcaption></figure>
+  </div>
+
+  <div class="finding">
+    <h3>At arrival, traversed levels held far less than calm levels at the same distance, although 5 s earlier they looked ordinary</h3>
+    <figure><div class="frame"><img src="figures/q1q3_fast_moves_q3_calm_vs_arrival.png" alt="Share of levels holding at least a given size: traversed levels at arrival vs 5 s earlier vs calm levels" loading="lazy"></div>
+    <figcaption>Share of $1 levels 0–25 bps beyond the touch holding at least a given size.</figcaption></figure>
+    <p class="obs"><span class="label">Observation</span>At arrival <span class="num">23%</span> of traversed levels held ≥ 0.1 BTC, against 76% of calm levels at the same distances; 5 s earlier the same levels held 71%. Levels were reached by sweeps: a median 21 levels were first printed at the same instant in fast moves.</p>
+    <p class="interp"><span class="label">Interpretation</span>Why they were thin is not identified: a sweep runs through a stretch because it is thin at that moment. For a trader, the size shown a few dollars ahead in a fast market is not what a sweep will meet.</p>
+    <div class="ex"><span class="label">Example</span>Bid $88,105, Dec 5 16:42:21 UTC: it held 14.37 BTC five seconds earlier; three wallets cancelled most of it, the last 274 ms before, and price found 0.0028 BTC in a sweep across 155 levels.</div>
+    <figure><div class="frame"><img src="figures/q1q3_fast_moves_card_q3_gone_before_arrival.png" alt="Event card: a bid level emptied before a sweep arrived on Dec 5" loading="lazy"></div>
+    <figcaption>Event card, Dec 5 16:42:21 UTC.</figcaption></figure>
+    <div class="ex counter"><span class="label">Counter-example</span>Bid $86,847, Dec 17 16:15:04 UTC: thin 5 s before, then refilled 130 ms before arrival (1.27 BTC from one top maker) and fully executed by a fired stop.</div>
+  </div>
+
+  <div class="finding">
+    <h3>Fast moves are taken disproportionately by fired stops and liquidations</h3>
+    <figure><div class="frame"><img src="figures/q1q3_fast_moves_taker_mix.png" alt="Taker mix in fast moves vs normal time" loading="lazy"></div>
+    <figcaption>Share of aggressive volume by taker kind.</figcaption></figure>
+    <div class="tbl"><table>
+      <thead><tr><th>Taker kind</th><th>Fast moves</th><th>Normal time</th></tr></thead>
+      <tbody>
+        <tr><td>fired stop / TP</td><td class="n">28% [22–40]</td><td class="n">6%</td></tr>
+        <tr><td>liquidation</td><td class="n">8% [4–13]</td><td class="n">0.4%</td></tr>
+        <tr><td>frontend market orders</td><td class="n">28% [21–34]</td><td class="n">52%</td></tr>
+      </tbody>
+    </table></div>
+    <p class="interp"><span class="label">Interpretation</span>About a third of fast-move volume is flow that does not choose its price. The direction of cause is not identified.</p>
+    <p><span class="chip cls-BL4">B-L4</span> <span class="small">The public tape has no taker type and no liquidation flag.</span></p>
+    <div class="ex counter"><span class="label">Counter-example</span>Dec 17 15:02:53 UTC: a 34 bps move that was 72% frontend market orders, with stops at 0.1%.</div>
+  </div>
+
+  <div class="finding">
+    <h3>After a fast move, depth near price comes back slowly</h3>
+    <figure><div class="frame"><img src="figures/q1q3_fast_moves_refill.png" alt="Depth within 10 bps of mid relative to pre-move level, around fast and slow moves" loading="lazy"></div>
+    <figcaption>Depth within 10 bps of the mid as a ratio to its pre-move level.</figcaption></figure>
+    <p class="obs"><span class="label">Observation</span>Time to hold ≥ 90% of pre-move depth for 10 s: <span class="num">77 s [55–110]</span> after a fast move, with 28 of 88 not within ~3 min; 6 s after a slow move. The same quoters refill, adding faster than before the move.</p>
+    <p class="interp"><span class="label">Interpretation</span>This mixes slow refill with continued volatility, since many fast moves have a second leg. An earlier "back in ~3 s" reading was noise and was withdrawn.</p>
+  </div>
+</section>
+
+<section id="q2">
+  <h2>Breakouts from a range</h2>
+  <p class="small">213 breakout attempts on 16 odd days, detected with the product's 1Box range engine on 1m candles: 100 successes (half a box beyond the edge within 30 min, median 13 bps) and 113 failures, plus 36 sweeps, 182 boundary tests, 542 ordinary ≥ 5 bps moves and 320 random seconds. Success and failure are only known afterwards, so every comparison describes what happened.</p>
+
+  <div class="finding">
+    <h3>Depth just beyond the edge did not separate breaks that worked from those that failed</h3>
+    <figure><div class="frame"><img src="figures/q2_breakouts_f1_target_depth.png" alt="Resting depth beyond the box edge at first contact, by outcome" loading="lazy"></div></figure>
+    <p class="obs"><span class="label">Observation</span>Resting 0–5 bps beyond the edge at first contact: <span class="num">57 BTC [44–71]</span> on successes vs <span class="num">61 BTC [50–73]</span> on failures. Success rate by depth tercile: 46% / 43% / 48%.</p>
+    <p><span class="chip cls-A">A</span></p>
+    <div class="ex"><span class="label">Example</span>Dec 17 18:42:54 UTC, down-break of $86,134: only 21 BTC below the edge; price ran 59 bps, with fired stops and liquidations 229 of the first minute's 288 BTC.</div>
+    <div class="ex counter"><span class="label">Counter-examples</span>Dec 5 22:36:18 UTC: a thick edge (119 BTC) broke anyway. Dec 13 17:03:43 UTC: a thin edge (12.5 BTC) still failed.</div>
+  </div>
+
+  <div class="finding">
+    <h3>The displayed edge trades far less than it shows, as does any level price approaches</h3>
+    <figure><div class="frame"><img src="figures/q2_breakouts_f2b_fate.png" alt="Fate of size resting beyond the edge at contact, by class, vs ordinary moves" loading="lazy"></div></figure>
+    <p class="obs"><span class="label">Observation</span>Of the size resting 0–5 bps beyond the edge at contact on successful breaks, <span class="num">5.2%</span> was filled in the next 60 s and 89% was cancelled before price reached it, about half pulled and half re-placed by the same wallet. Ordinary ≥ 5 bps moves look the same: 5.0% filled, 93% cancelled first.</p>
+    <p class="interp"><span class="label">Interpretation</span>Expect roughly a tenth of the size shown just past a range edge to trade there in the next minute. It is generic churn at any approached level, not a range-edge property.</p>
+    <figure><div class="frame"><img src="figures/q2_breakouts_card_f2_success_cancelled_ahead.png" alt="Event card: edge liquidity cancelled ahead of an up-break on Dec 1" loading="lazy"></div>
+    <figcaption>Dec 1 18:12:00 UTC, up-break of $85,140: 89 BTC displayed, 2% filled, 98% cancelled before price came. Price traded through the whole band, yet only 3.2 BTC printed in it.</figcaption></figure>
+    <div class="ex counter"><span class="label">Counter-example</span>Dec 9 20:16:05 UTC, down-break of $93,623: only 14 BTC displayed, but 38% was filled, and price ran 45 bps.</div>
+  </div>
+
+  <div class="finding">
+    <h3>The side behind price thinned after contact, as it does after any move</h3>
+    <figure><div class="frame"><img src="figures/q2_breakouts_f3_opposite_refill.png" alt="Opposite-side depth after contact, by outcome and controls" loading="lazy"></div></figure>
+    <p class="obs"><span class="label">Observation</span>Depth within 10 bps of the opposite touch, 30 s after contact vs at contact: success 0.82×, failure 0.82×, ordinary moves 0.88×, random seconds 0.99×.</p>
+    <p class="interp"><span class="label">Interpretation</span>No "bids stepping in behind the break" pattern marked successes.</p>
+  </div>
+
+  <div class="finding">
+    <h3>Fired stops were a large, lumpy part of break volume, and resting stops did not predict the outcome</h3>
+    <figure><div class="frame"><img src="figures/q2_breakouts_f4_stops.png" alt="Fired stops and liquidations share of break volume, and resting stop fuel, by outcome" loading="lazy"></div></figure>
+    <p class="obs"><span class="label">Observation</span>Per-event median share of break volume from fired stops and liquidations in the first minute: 9.0% on successes, 2.5% on failures, but pooled over events failures were at least as stop-heavy (27.3% vs 24.7%), and the biggest flushes were failures. Stops resting 0–20 bps beyond the edge: $0.33 M vs $0.49 M; success rate by stop-fuel tercile 46% / 52% / 42%.</p>
+    <p class="interp"><span class="label">Interpretation</span>Stops that fire are largely a consequence of how far price goes.</p>
+    <p><span class="chip cls-BL4">B-L4</span> · <span class="chip cls-Baddr">B-addr</span> <span class="small">a known address's resting stops</span></p>
+    <div class="ex counter"><span class="label">Counter-example</span>Dec 31 16:24:35 UTC, down-break of $87,780: stops plus liquidations were 102 of 135 BTC, and the break still failed.</div>
+  </div>
+
+  <div class="finding">
+    <h3>At the first stall after a break, the book looked like the book at any local extreme</h3>
+    <figure><div class="frame"><img src="figures/q2_breakouts_f5_stall.png" alt="Depth ahead and behind price at the first stall vs path points and controls" loading="lazy"></div></figure>
+    <p class="obs"><span class="label">Observation</span>Depth behind price at the stall vs along the path: 1.22× after successes, 1.27× on ordinary moves, 1.28× on random windows. One second later it was 0.74×. Depth ahead was ordinary.</p>
+    <p class="interp"><span class="label">Interpretation</span>Price did not visibly stop at a wall ahead. The "thicker book behind" comes from how an extreme is picked; an earlier reading of it as makers defending was withdrawn.</p>
+  </div>
+</section>
+
+<section id="q4">
+  <h2>Absorption and large displayed orders</h2>
+  <p class="small">265 absorption episodes on 14 odd days: 15 s windows with ≥ $6.07 M net one-sided aggression and price progress in the bottom decile. 301,221 "walls": single orders at the 99.9th size percentile for their distance.</p>
+
+  <div class="finding">
+    <h3>The level that took the aggression was almost always used up</h3>
+    <figure><div class="frame"><img src="figures/q4_absorption_paths.png" alt="Absorption episode path types and level outcome" loading="lazy"></div></figure>
+    <p class="obs"><span class="label">Observation</span>At the end of the window a median 2% of the absorbing level's peak size was still resting. Of 265 episodes the level was consumed in 186, pulled in 60, sustained in 8, and held with light size in 8.</p>
+    <p class="interp"><span class="label">Interpretation</span>Heavy aggression that fails to move price reliably finds a level that gets consumed, not a wall that stays. Where the mid stayed pinned, it was usually many makers re-forming the book.</p>
+    <div class="ex"><span class="label">Example</span>Dec 9 17:39:26 UTC: one taker lifted ~$13.3 M in 15 s; 65 different makers were filled at $93,734 and the mid barely moved.</div>
+    <div class="ex counter"><span class="label">Counter-example</span>Dec 5 17:53:37 UTC: an 82 BTC bid at the touch from one wallet was sold through in 3.4 s.</div>
+  </div>
+
+  <div class="finding">
+    <h3>What followed absorption showed no detectable direction</h3>
+    <figure><div class="frame"><img src="figures/q4_absorption_outcomes.png" alt="Continuation vs reversal after absorption, heavy moving aggression and random seconds" loading="lazy"></div></figure>
+    <p class="obs"><span class="label">Observation</span>Price went ±10 bps with the aggressors first in <span class="num">50.2% [44.6–54.9]</span> of absorption episodes, 49.6% after heavy aggression that did move price, and 50.2% at random seconds.</p>
+    <p class="interp"><span class="label">Interpretation</span>"Effort without result" was not a hold signal. The only lean, at ±5 bps (55.9%), points toward continuation. This agrees with the product's own Tape S/R finding that retests carrying "pressure" held less often.</p>
+    <p><span class="chip cls-A">A</span></p>
+  </div>
+
+  <div class="finding">
+    <h3>Many of the biggest absorbing orders were position-closing or triggered stop orders</h3>
+    <p class="obs"><span class="label">Observation</span>Reduce-only orders supplied <span class="num">29.5%</span> of the size filled at the absorbing price, against 8.8% of all maker fills; triggered stop-limit orders supplied 10%. Same-price refill within 1 s was rarer at the absorbing price (6.8%) than at ordinary touch fills (13.9%).</p>
+    <figure><div class="frame"><img src="figures/q4_card_A1_stop_type_bids_filled_20251217_1452.png" alt="Event card: three 250 BTC reduce-only stop-limit buys filled inside a rally on Dec 17" loading="lazy"></div>
+    <figcaption>Dec 17 14:52–14:56 UTC: one wallet's three 250 BTC reduce-only stop-limit buys activated inside a +179 bps rally and were filled by sellers within seconds. The rally resumed each time.</figcaption></figure>
+    <p class="interp"><span class="label">Interpretation</span>A big bid that appears inside a fast move may be a triggered stop or a closing limit, not a defender. This describes order flags, not intent.</p>
+    <p><span class="chip cls-Baddr">B-addr</span> <span class="small">A known address's reduce-only and trigger orders are visible before they fire.</span></p>
+  </div>
+
+  <div class="finding">
+    <h3>Large displayed orders are mostly one kind of algorithm; when price actually reaches one, it usually trades</h3>
+    <figure><div class="frame"><img src="figures/q4_walls_placebo.png" alt="Walls: fill rate when price reached them and where price went after a pull" loading="lazy"></div></figure>
+    <p class="obs"><span class="label">Observation</span>99.3% of walls were cancelled and only 5.5% were ever approached within 3 ticks; 74% came from three wallets active Dec 1–7 whose orders lived ~2 s. Of 2,223 walls placed ≥ 4 ticks away that price later reached, 63% got a fill. Owners whose walls usually filled on earlier days got a fill 96% of the time, against 45% for owners who usually cancelled. After a wall was pulled unfilled, price reached its price about as often as a placebo level (66.5% vs 62.1%).</p>
+    <p class="interp"><span class="label">Interpretation</span>Whether a wall trades depends on where it was placed and who placed it. A pulled wall did not mark where price was heading.</p>
+    <p><span class="chip cls-A">A</span> size · <span class="chip cls-Baddr">B-addr</span> owner history</p>
+    <div class="ex counter"><span class="label">Counter-example</span>Dec 17 15:28:08 UTC: a "usually filled" owner cancelled a 124 BTC remainder at $89,707 unfilled; price traded back through it 16 s later.</div>
+  </div>
+</section>
+
+<section id="q5">
+  <h2>Liquidity-provider wallets</h2>
+  <p class="small">16 odd days: 6.53 M maker fills ($46.2 B) by 16,036 maker addresses, and 2,297 book snapshots.</p>
+
+  <div class="finding">
+    <h3>Near-price depth sits with a few addresses</h3>
+    <figure><div class="frame"><img src="figures/q5_wallets_concentration.png" alt="Concentration of near-touch depth and maker fills by top wallets" loading="lazy"></div></figure>
+    <p class="obs"><span class="label">Observation</span>The 10 largest holders own <span class="num">63%</span> of resting BTC within 5 bps of the mid; 50 own 93%. The top 10 makers take 41% of maker fills. One address was the largest maker on 11 of 16 days and held ~18% of near-touch depth.</p>
+    <p><span class="chip cls-A">A</span> fill concentration · <span class="chip cls-BL4">B-L4</span> ownership of displayed depth</p>
+  </div>
+
+  <div class="finding">
+    <h3>Makers fall into types that split depth and fills very differently</h3>
+    <figure><div class="frame"><img src="figures/q5_wallets_types.png" alt="Maker types: share of depth, fills and churn" loading="lazy"></div></figure>
+    <div class="tbl"><table>
+      <thead><tr><th>Type</th><th>Addresses</th><th>Depth within 5 bps</th><th>Maker fills</th></tr></thead>
+      <tbody>
+        <tr><td>near-book multi-level quoters</td><td class="n">281</td><td class="n">79%</td><td class="n">45%</td></tr>
+        <tr><td>touch quoters (cancel 78% of adds within 500 ms)</td><td class="n">83</td><td class="n">7%</td><td class="n">29%</td></tr>
+        <tr><td>occasional large resting wallets</td><td class="n">4,802</td><td class="n">2%</td><td class="n">16%</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <div class="finding">
+    <h3>When price comes to an order, whether it stays depends on its owner</h3>
+    <figure><div class="frame"><img src="figures/q5_wallets_age_split.png" alt="Cancel rate on approach vs baseline by order age, and share still there at the first print" loading="lazy"></div>
+    <figcaption>Young orders mostly re-measure ordinary churn; orders resting a few seconds are cancelled far more often than their age predicts when price approaches.</figcaption></figure>
+    <p class="obs"><span class="label">Observation</span>Of orders resting ≥ 3 s when the touch came within 3 bps, <span class="num">32%</span> by count and <span class="num">9%</span> by BTC were still there at the first print. A split-half check (types set on Dec 1–15, outcomes on Dec 17–31): near-book quoters were still there 26% of the time (68% expected from ordinary churn); slow wallets 97% (95% expected).</p>
+    <figure><div class="frame"><img src="figures/q5_wallets_stay_by_type.png" alt="Share still there at the first print, by owner type" loading="lazy"></div></figure>
+    <p class="interp"><span class="label">Interpretation</span>High-frequency addresses withdraw or move size as price approaches, well beyond their normal churn. The size that stays belongs to slow addresses. Orders ≥ 10 BTC were still there 94% of the time when a slow wallet owned them, 14% when a near-book quoter did, and the public book does not show the owner.</p>
+    <p><span class="chip cls-BL4">B-L4</span> · <span class="chip cls-Baddr">B-addr</span> <span class="small">for up to 10 followed addresses</span></p>
+  </div>
+
+  <div class="finding">
+    <h3>After a fill, price on average drifted against the makers who waited</h3>
+    <figure><div class="frame"><img src="figures/q5_wallets_markouts.png" alt="Maker markouts after fills by wallet type" loading="lazy"></div></figure>
+    <p class="obs"><span class="label">Observation</span>Slow resting wallets: −1.7 bps at 10 s (notional-weighted, before fees). Touch quoters: about flat (+0.2). Single fills are very noisy (IQR ~9 bps at 60 s).</p>
+  </div>
+
+  <div class="finding">
+    <h3>Who the makers are is stable; how well their fills do is not</h3>
+    <figure><div class="frame"><img src="figures/q5_wallets_stability.png" alt="Day-to-day rank correlation of wallet metrics" loading="lazy"></div></figure>
+    <p class="obs"><span class="label">Observation</span>How a wallet quotes has a day-to-day rank correlation of 0.93–0.96. Ten makers chosen on earlier days covered 38% of the next day's maker fills and 52% of its near-touch depth. Fill markouts are not stable (0.13 at 60 s).</p>
+    <p class="interp"><span class="label">Interpretation</span>The data supports a watch list of which addresses are the book. It does not support a ranking of "informed" makers.</p>
+    <div class="ex counter"><span class="label">Counter-example</span>On the quiet Saturdays (Dec 13 and 27) traits shifted: the correlation of cancel-on-approach fell to 0.42.</div>
+  </div>
+</section>
+
+<section id="q6">
+  <h2>Does anything predict the next move at a manual delay?</h2>
+  <p class="small">Three event families on 16 odd days: 2,820 execution bursts (≥ $2.56 M net in 5 s), 9,930 sweeps (≥ 2 bps through the book in one block) and 25,475 near-touch pull bursts. Entries at 0, 2 and 5 s, compared with ordinary seconds that had the same trailing HL and Binance moves.</p>
+
+  <div class="finding">
+    <h3>HL's mid trails Binance by about 0.7 s, on every day</h3>
+    <figure><div class="frame"><img src="figures/q6q7_response_patterns_binance.png" alt="Cross-correlation of HL and Binance returns by lag" loading="lazy"></div></figure>
+    <p class="obs"><span class="label">Observation</span>100 ms returns correlate best with Binance 700–800 ms earlier on all 16 days. For 1 s returns the correlation is 0.30 in the same second and 0.64 with Binance's previous second. Events Binance led moved no more than ordinary seconds with the same Binance move.</p>
+    <p class="interp"><span class="label">Interpretation</span>The information is in the Binance move, not the HL event, and 0.7 s is below the manual reaction floor. A clock offset and a true lead cannot be separated.</p>
+    <p><span class="chip cls-A">A</span></p>
+  </div>
+
+  <div class="finding">
+    <h3>By the time a burst is visible, the move has mostly happened</h3>
+    <figure><div class="frame"><img src="figures/q6q7_response_patterns_fwd.png" alt="Forward moves after pull bursts, execution bursts and sweeps vs the taker round-trip cost" loading="lazy"></div>
+    <figcaption>Mean mid move in the event's direction, by entry delay, against the 9 bps taker round trip (dotted line).</figcaption></figure>
+    <p class="obs"><span class="label">Observation</span>Before an execution burst the mid had already moved +7.4 bps over the prior minute. Beyond comparable seconds: +0.51 bps over the next 5 s, but −0.08 over the minute from t + 2 s. Pull bursts: +0.20 bps from t + 2 s. Sweeps: −0.24.</p>
+    <figure><div class="frame"><img src="figures/q6q7_response_patterns_fp.png" alt="Symmetric bracket outcomes entered at t plus 2 s, net of fees" loading="lazy"></div></figure>
+    <p class="interp"><span class="label">Interpretation</span>A symmetric ±5, ±10 or ±20 bps bracket entered at t + 2 s resolves about 50/50 in every family and loses 9–10 bps net of fees. These events tell you a move is happening now, not that it will continue.</p>
+  </div>
+</section>
+
+<section id="q7">
+  <h2>Other patterns</h2>
+
+  <div class="finding">
+    <h3>Flicker: about half the near-touch orders live under 500 ms</h3>
+    <figure><div class="frame"><img src="figures/q6q7_response_patterns_flicker.png" alt="Share of near-touch adds cancelled within 500 ms by distance, and around moves" loading="lazy"></div></figure>
+    <p class="obs"><span class="label">Observation</span>Of adds placed from inside the spread to ~5 bps away (445 M adds in all), 49% were displayed and cancelled within 500 ms, and about half of those never appeared in a single public snapshot. After a ≥ 5 bps move flicker rose on both sides.</p>
+    <p class="interp"><span class="label">Interpretation</span>Displayed size at the touch is what the quoting algorithms show this half-second. The rise after a move is symmetric, so it signals activity, not direction.</p>
+    <p><span class="chip cls-BL4">B-L4</span></p>
+  </div>
+
+  <div class="finding">
+    <h3>Round numbers and "third time lucky" are not special on this data</h3>
+    <figure><div class="frame"><img src="figures/q6q7_response_patterns_attempts.png" alt="Break-through rates by attempt number for round numbers, swings and placebo prices" loading="lazy"></div></figure>
+    <p class="obs"><span class="label">Observation</span>First-attempt break-through: round $100 levels <span class="num">52.5%</span>, placebo prices ($x37) <span class="num">52.3%</span>, round $500 54%, 15m swings 55% (16,606 attempts). Later attempts differ by a few points, and the placebo shows the same pattern.</p>
+    <div class="ex counter"><span class="label">Counter-example</span>$89,900 on Dec 11 02:32–02:36 was rejected four times and never broke, what a trader would call a real level. It is one draw from a pattern the placebo reproduces.</div>
+  </div>
+
+  <div class="finding">
+    <h3>Around fast moves the taker side turns mechanical, and makers re-quote harder rather than leave</h3>
+    <figure><div class="frame"><img src="figures/q6q7_response_patterns_mix.png" alt="Taker mix and passive flow around fast moves" loading="lazy"></div></figure>
+    <p class="obs"><span class="label">Observation</span>Fired stops plus liquidations were 26% of with-move taker flow in the 30 s before a fast move started and 41% in its first minute, against ~8% in ordinary seconds. Within 5 bps of the mid, makers added and pulled 2–4× their usual volume on both sides.</p>
+  </div>
+
+  <div class="finding">
+    <h3>Stop cascades come in batches on a ~3 s clock, and stops fill past their trigger</h3>
+    <figure><div class="frame"><img src="figures/q6q7_response_patterns_triggers.png" alt="Gaps between stop-fire batches, slippage past trigger, and clustering" loading="lazy"></div></figure>
+    <p class="obs"><span class="label">Observation</span>Of 93,207 fired triggers, gaps between fire batches pile up at 3, 6 and 9 s; only 0.9% are under 2 s. Stop fills land a median <span class="num">1.8 bps</span> past the trigger (p95 10.6). A batch is followed by another within 4 s about twice as often as a comparable moment.</p>
+    <p class="interp"><span class="label">Interpretation</span>The ~3 s rhythm is consistent with Hyperliquid's mark-price updates (triggers fire on the mark price); that cause is an inference. The usable parts for a manual trader are the rhythm and the slippage.</p>
+    <p><span class="chip cls-A">A</span> the pulse of prints · <span class="chip cls-BL4">B-L4</span> which prints are stops</p>
+  </div>
+</section>
+
+<section id="changed">
+  <h2>What changed after independent review</h2>
+  <div class="callout warn">
+    <p>Each section was checked by a separate skeptic before this report. These readings were withdrawn or reversed:</p>
+    <ul>
+      <li>Depth "back in ~3 s" after a fast move was noise in per-second data. With a persistence rule it is a median 77 s.</li>
+      <li>"Pulled 3× faster ahead of fast moves" is a per-second effect of price speed; per level the total is the same.</li>
+      <li>A "thicker book behind price" at the first stall after a break comes from how an extreme is picked; it is gone 1 s later.</li>
+      <li>Blinking levels being "reached more often" was volatility.</li>
+      <li>A four-way "why was this level thin" split was not interpretable: withdrawal and sweep timing cannot be separated in hindsight.</li>
+    </ul>
+  </div>
+</section>
+
+<section id="open">
+  <h2>Open questions</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>Question</th><th>What would resolve it</th></tr></thead>
+    <tbody>
+      <tr><td>Why are levels thin when a sweep arrives?</td><td>The book at a moment known live, against matched moments with no sweep (registered cell H09)</td></tr>
+      <tr><td>Did Binance precede the pulls ahead of fast moves?</td><td>Apply the 0.7 s lead-lag to the per-level pull timing</td></tr>
+      <tr><td>How much "pulled" is really cleanup or requote?</td><td>The registered robustness labels on the sealed half</td></tr>
+      <tr><td>Does stop fuel beyond an edge predict follow-through?</td><td>H19 and E2 on the sealed half</td></tr>
+      <tr><td>Does single-maker absorption hold better than a vanishing display? (5/15 vs 26/48, p = 0.24)</td><td>H11 on the sealed half</td></tr>
+      <tr><td>Does an owner's history beat a book-only model for "will this wall trade"?</td><td>Fit on odd days, test on even days (H14, H15)</td></tr>
+      <tr><td>Are December's top maker addresses active today?</td><td>A live per-address check</td></tr>
+      <tr><td>Do rejected post-only orders carry information?</td><td>The rejected-orders archive (not downloaded; invisible live anyway)</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="caveats">
+  <h2>Caveats</h2>
+  <ul>
+    <li><b>Discovery half only.</b> 16 odd December days; the fast-move section uses Dec 1–17. Intervals rest on 8–16 day clusters and are rough. One month, in a downtrend, with thin holidays.</li>
+    <li><b>Hindsight-aligned splits.</b> Fast moves chosen by size, levels chosen because price reached them, breakout success and failure, "approached" orders. None of these is a live feature.</li>
+    <li><b>Labels are choices.</b> Pull versus requote depends on the time window; thresholds change shares. The robust statements are the ones reported across cuts.</li>
+    <li><b>Fees.</b> Returns are on the mid and before fees unless stated. Maker markouts exclude the 1.5 bps maker fee.</li>
+    <li><b>A wallet is an address.</b> Nothing here identifies a person, a firm or an intent.</li>
+  </ul>
+  <div class="callout">
+    <h3>What happens next</h3>
+    <p>A pre-registered confirmatory test runs on the 15 sealed even days: 20 primary hypotheses and 34 fixed trade specifications, every one with a stop, costed at taker and maker fees. The sealed half is opened once, after a second freeze of the claims to be tested. The final report will rank each idea as supported, suggestive, or not supported.</p>
+  </div>
+</section>
+
+<footer>
+  Interim report, 2026-09-25. Data: Albers, Cucuringu, Howison and Shestopaloff, "An Open Book: Level 4 Order Book Data from the Hyperliquid Exchange", Zenodo 18184441 (CC BY 4.0), BTC only. Binance BTCUSDT perpetual trades for the lead-lag check. Times are UTC; 1 bp ≈ $9 at $88–90k.
+</footer>
+</main>
+</div>
+</body>
+</html>
